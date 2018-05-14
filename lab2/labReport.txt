@@ -1,0 +1,126 @@
+Drew Underwood: Lab 2 Report
+
+3.1) Process Table 
+-First Run
+ Output: "I am awake"
+ Process Name: lab2
+ Process State: Sleeping
+ Process ID: 1889
+ Parent Process ID: 29981
+-Second Run
+ Output: "I am awake"
+ Process Name: lab2
+ Process State: Sleeping
+ Process ID: 1901
+ Parent Process ID: 29981 
+The parent process for all programs has the ID 29921, while PID has changed each time we run the program. 
+The name of the program running our processes is called "bash"
+
+3.2) The Fork System Call
+Program Output: 
+ Process 2384's parent process ID is 29981
+ Process 2386's parent process ID is 2384
+ Process 2385's parent process ID is 2384
+ Process 2387's parent process ID is 2385
+Process Tree:
+		29981
+		 /\
+	        /  \
+	       /    \
+	    2386   2385
+		     \
+		      \
+		       \
+		      2387
+Way the tree was built:
+Initially, bash runs fork() which creates an identical copy of the current running process
+and then continues execution from the same spot in both processes. Both programs would continue
+on to the next line of execution which is another fork() call. The first process has already run
+a fork() (Process 2385) so when it calls another fork(), anothe child process will be created 
+and that leg of the tree will have another branch (Process 2387). The second process from the original 
+fork() call will call fork only once, thus creating the left hand branch illustrated (Process 2386).
+Removing the sleep statement:
+When the sleep statement is removed, the parent process finishes its execution too quickly, 
+causing one of the processes to to adopt init as its parent process.
+
+3.3) The Fork Sys Call continued
+Completed program:
+#include <stdio.h>
+
+int main() {
+        int ret;
+        ret = fork();
+        if(ret == 0) {
+                /* this is the child process */
+                printf("The parent process ID is %d\n", getpid());
+                printf("The child's parent process ID is %d\n", getppid());
+        } else {
+                /* this is the parent process */
+                printf("The parent process ID is %d\n", getpid());
+                printf("The parent's parent process ID is %d\n", getppid());
+        }
+        sleep(2);
+        return 0;
+}
+
+Output: 
+The parent process ID is 3794
+The parent's parent process ID is 29981
+The parent process ID is 3795
+The child's parent process ID is 3794
+
+The adnvantage you would get from returning different values for fork, would be in knowing 
+what processes have just completed. The parent process should not finish its execution unless 
+all of its child processes have finished their execution.
+
+3.4) Time Slicing
+Output: 
+
+Parent loop reaches its completion first:
+Child: 498968
+Parent: 499997
+Child: 498969
+Child: 498970
+Child: 498971
+Parent: 499998
+Child: 498972
+Child: 498973
+Parent: 499999
+Child: 498974
+Child: 498975
+Child: 498976
+Child: 498977
+Child: 498978
+
+The parent process cuts off the child processes, and the kernel runs the parent before
+it should.
+
+3.5) Process Synchronization Using Wait
+The main difference between 3.5 and 3.4 is that the experiment in 3.5 waits for all
+children to have finished properly before continuing execution on the parents
+
+3.6) Signals using kill
+The child process does have an infinite loop, but once the parent process wakes up
+it kills the execution of the child process and halts all execution.
+
+The childs count should be close to 1000, which would be close to the parents expected
+10 second sleep count
+
+The child does not reach this count exactly, the reason being there is some delay 
+between starting the parent process, and starting the child process
+
+3.7) The execve() Family of functions
+The only conidtions under which the printf statement is executed is if the exec function call
+returns an error. If this function call does not return an error then it simply does not return
+at all and hence, the printf statement will not execute.
+
+3.8) The return of the Main()
+The range of values for the child process will be anywhere from 0-255
+
+If the process is killed prematurely, the parent process will capture the value 15 for the signal.
+Whereas if the child process is reached normally, then it will receive a value from 0-255.
+
+These values can be useful in determining whether or not a child process was completed normally
+or abnormally.
+
+

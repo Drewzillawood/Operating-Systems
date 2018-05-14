@@ -1,0 +1,26 @@
+Lab3_Report
+3.1) Programming with pthreads
+3.1_1) We cannot see the threads output when sleep(5) is added to the code as this causes main to finish
+       much more quickly than its child processes. Once main terminates, there is no place for the 
+       threads to return but the parent process they were assigned to.
+3.1_2) After adding the two pthread_join statements just before the printf() statement, we are telling
+       main that it cannot finish unless these two threads are already finished. 
+3.1_3) See attached code. 
+*********************************************************************************************************
+
+3.2) Thread Synchronization
+3.2.1) Mutex
+3.2.1_1) Value of v = 0
+3.2.1_2) Value of v = 990
+         Once we remove the mutex_lock/unlock from the function calls, we effectively eliminate 
+         all restrictions on access to the critical region. Therefor, as increment sleeps for
+         longer intervals it will take longer to execute to completion.
+--------------------------
+
+3.2.2) Conditional Variable
+3.2.2_1) See attached code.
+--------------------------
+
+3.3) Modified Producer Consumer Problem
+3.3_1) See attached code. 
+

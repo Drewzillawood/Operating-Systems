@@ -1,0 +1,10 @@
+Through this project we were to demonstrate an understanding of how a shell functions. 
+I was able to understand how a kernel receives text input and can translate that into 
+commands to execute a program. On top of this was the process of understanding
+forks and how they can create a dependent chain down through their children.
+
+Taking advantage of built in functions like wait, execpv and so on were vital 
+to my understanding on this project. My biggest learning curve was just remembering
+how to parse a string properly in C once again. Most of the rest of the concepts came
+fairly naturally. The last part on running a program in the background is something 
+I haven't fully grasped quite yet though.
